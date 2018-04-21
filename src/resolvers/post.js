@@ -1,7 +1,7 @@
 import GraphQLDate from 'graphql-date'
 import Post from '../models/post'
 import User from '../models/user'
-import PostLikes from '../models/PostLikes'
+import PostLikes from '../models/postLikes'
 import yup from 'yup'
 import { knex } from '../config/database'
 import { PubSub, withFilter } from 'graphql-subscriptions'
