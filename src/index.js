@@ -1,7 +1,6 @@
 import express from 'express'
 import path from 'path'
 import constants from './config/constants'
-import config from './config'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import { knex } from './config/database'
@@ -25,13 +24,11 @@ const schema = makeExecutableSchema({ typeDefs, resolvers })
 
 Model.knex(knex)
 
-const SECRET = constants.JWT_SECRET
-
 const addUser = async req => {
   try {
     const token = req.headers.authorization
     if (token != null) {
-      const user = await jwt.verify(token.split(' ')[1], SECRET)
+      const user = await jwt.verify(token.split(' ')[1], constants.JWT_SECRET)
       req.user = user
     } else {
       req.user = null
@@ -52,7 +49,7 @@ app.use(
     schema,
     context: {
       user: req.user,
-      SECRET,
+      SECRET: constants.JWT_SECRET,
       serverUrl: `${req.protocol}://${req.get('host')}`
     }
   }))
@@ -62,13 +59,13 @@ app.use(
   '/graphiql',
   graphiqlExpress({
     endpointURL: '/graphql',
-    subscriptionsEndpoint: 'ws://localhost:3010/subscriptions'
+    subscriptionsEndpoint: constants.GRAPHQL_SUBSCRIPTIONS_URL
   })
 )
 
 const ws = createServer(app)
 
-ws.listen(3010, err => {
+ws.listen(constants.PORT, err => {
   if (err) {
     console.log(`Error: ${err}`)
   } else {
@@ -84,7 +81,7 @@ ws.listen(3010, err => {
       }
     )
     console.log(`
-      App listening on 3010
+      App listening on ${constants.PORT}
       Env: ${process.env.NODE_ENV}
     `)
   }
