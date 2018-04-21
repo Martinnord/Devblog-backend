@@ -1,9 +1,9 @@
 import User from './user'
 import Post from './post'
-import PostLike from './postLikes'
+import PostLikes from './postLikes'
 
 export default {
   User,
   Post,
-  PostLike
+  PostLikes
 }
