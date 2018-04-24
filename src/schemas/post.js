@@ -7,7 +7,7 @@ export default `
     content: String!
     image_url: String!
     user: User!
-    likes: [User]
+    likes: [User]!
     updated_at: String
     created_at: String
   }

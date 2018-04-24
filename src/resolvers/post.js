@@ -74,7 +74,10 @@ export default {
     deletePost: async (_, { id }, { user }) => {
       try {
         await requireAuth(user)
-        return await Post.query().deleteById(id)
+
+        return await Post.query()
+          .findById(id)
+          .delete()
       } catch (err) {
         throw err
       }
