@@ -1,7 +1,7 @@
 exports.up = function(knex) {
   return knex.schema
     .createTable('users', function(table) {
-      table.increments('id').primary()
+      table.increments('id')
       table
         .text('username')
         .notNullable()
@@ -39,7 +39,6 @@ exports.up = function(knex) {
         .integer('user_id')
         .references('id')
         .inTable('users')
-        .onDelete('CASCADE')
       table.timestamp('created_at').defaultTo(knex.fn.now())
       table.timestamp('updated_at').defaultTo(knex.fn.now())
     })
@@ -54,6 +53,7 @@ exports.up = function(knex) {
         .integer('post_id')
         .references('id')
         .inTable('posts')
+        .onDelete()
         .notNullable()
       table.timestamp('created_at').defaultTo(knex.fn.now())
       table.timestamp('updated_at').defaultTo(knex.fn.now())
