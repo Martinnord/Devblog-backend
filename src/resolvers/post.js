@@ -25,7 +25,7 @@ export default {
     likes: async ({ id, user_id }) => {
       return await PostLikes.query()
         .where('post_id', id)
-        .select('users.username', 'users.profile_image')
+        .select('users.username', 'users.profile_image', 'users.id')
         .from('post_likes')
         .fullOuterJoin('users', 'post_likes.user_id', 'users.id')
     }
@@ -60,6 +60,7 @@ export default {
       }
     },
     updatePost: async (_, { id, title, content, image_url }, { user }) => {
+      console.log('id', id)
       try {
         await requireAuth(user)
         return await Post.query().patchAndFetchById(id, {
