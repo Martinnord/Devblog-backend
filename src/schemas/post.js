@@ -24,7 +24,7 @@ export default `
 
   type Mutation {
     createPost(title: String!, content: String!, image_url: String): Post
-    updatePost(id: Int!, title: String, content: String!): Post
+    updatePost(id: Int!, title: String, content: String!, image_url: String): Post
     deletePost(id: Int!): Post
     likePost(id: ID!): Post
   }
