@@ -60,7 +60,6 @@ export default {
       }
     },
     updatePost: async (_, { id, title, content, image_url }, { user }) => {
-      console.log('id', id)
       try {
         await requireAuth(user)
         return await Post.query().patchAndFetchById(id, {
