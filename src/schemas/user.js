@@ -25,7 +25,7 @@ export default `
 
   type Query {
     getAllUsers: [User]
-    getUser(username: String!): User
+    getUser(username: String!, id: ID): User
     currentUser: User
   }
 
