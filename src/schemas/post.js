@@ -6,6 +6,7 @@ export default `
     title: String!
     content: String!
     image_url: String!
+    is_liked: Boolean! @default(value: false)
     user: User!
     likes: [User]!
     updated_at: String
