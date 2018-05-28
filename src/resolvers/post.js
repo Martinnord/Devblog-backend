@@ -125,7 +125,7 @@ export default {
 
         const newLike = await PostLikes.query()
           .where('post_id', id)
-          .insert({ user_id: user.id, post_id: parseInt(id), is_liked: true })
+          .insert({ user_id: user.id, post_id: parseInt(id) })
 
         const pupsubb = pubsub.publish(POST_LIKED, {
           postLiked: {
