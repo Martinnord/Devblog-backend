@@ -55,7 +55,6 @@ exports.up = function(knex) {
         .inTable('posts')
         .onDelete('CASCADE')
         .notNullable()
-      table.boolean('is_liked')
       table.timestamp('created_at').defaultTo(knex.fn.now())
       table.timestamp('updated_at').defaultTo(knex.fn.now())
     })
