@@ -6,7 +6,6 @@ export default `
     title: String!
     content: String!
     image_url: String!
-    is_liked: Boolean! @default(value: false)
     user: User!
     likes: [User]!
     updated_at: String
@@ -26,7 +25,7 @@ export default `
   type Mutation {
     createPost(title: String!, content: String!, image_url: String): Post
     updatePost(id: Int!, title: String, content: String!, image_url: String): Post
-    deletePost(id: Int!): Post
+    deletePost(id: ID): Post
     likePost(id: ID!): Post
   }
 
