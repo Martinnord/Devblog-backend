@@ -25,8 +25,21 @@ export default `
   type Mutation {
     createPost(title: String!, content: String!, image_url: String): Post
     updatePost(id: Int!, title: String, content: String!, image_url: String): Post
-    deletePost(id: ID): Post
+    deletePost(input: deletePostInput!): deletePostPayload
     likePost(id: ID!): Post
+  }
+
+  input deletePostInput {
+    id: ID!
+  }
+
+  type deletePostPayload{
+    id: ID!
+    title: String!
+    content: String!
+    image_url: String!
+    user: User!
+    likes: [User]!
   }
 
   schema {
@@ -34,5 +47,4 @@ export default `
     mutation: Mutation
     subscription: Subscription
   }
-
 `;

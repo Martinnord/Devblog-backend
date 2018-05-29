@@ -57,7 +57,6 @@ export default {
       return await Post.query().orderBy('created_at', 'desc')
     },
     getPost: async (_, { id }) => {
-      console.log('id', id)
       return await Post.query().findById(id)
     },
     getUserPosts: async (_, args, { user }) => {
@@ -94,16 +93,17 @@ export default {
         throw err
       }
     },
-    deletePost: async (_, { id }, { user }) => {
+    deletePost: async (_, { input: { id } }, context) => {
       try {
-        console.log('user', user)
-        console.log('id', id)
+        console.log('context', context)
         // await requireAuth(user)
+        console.log('args', id)
 
-        const test = await Post.query().deleteById(id)
-
-        console.log('test', test)
-        return test
+        const post = await Post.query().deleteById(id)
+        console.log('post', post)
+        // const test = await post.query().delete().where({ id })
+        // console.log('test', test)
+        return post
       } catch (err) {
         throw err
       }
