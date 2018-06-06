@@ -8,6 +8,7 @@ export default `
     image_url: String!
     user: User!
     likes: [User]!
+    comments: [Comment]!
     updated_at: String
     created_at: String
   }
@@ -47,4 +48,4 @@ export default `
     mutation: Mutation
     subscription: Subscription
   }
-`;
+`

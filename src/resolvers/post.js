@@ -2,6 +2,7 @@ import GraphQLDate from 'graphql-date'
 import Post from '../models/post'
 import User from '../models/user'
 import PostLikes from '../models/postLikes'
+import Comment from '../models/comment'
 import yup from 'yup'
 import { knex } from '../config/database'
 import { PubSub, withFilter } from 'graphql-subscriptions'
@@ -28,6 +29,26 @@ export default {
         .select('users.username', 'users.profile_image', 'users.id')
         .from('post_likes')
         .fullOuterJoin('users', 'post_likes.user_id', 'users.id')
+    },
+    comments: async ({ id, user_id }) => {
+      const test = await Comment.query()
+        .where('post_id', id)
+        .select(
+          'users.username',
+          'users.profile_image',
+          'users.id',
+          'post_comments.comment'
+        )
+        .from('post_comments')
+        .fullOuterJoin('users', 'post_comments.user_id', 'users.id')
+      // .select('users.username', 'users.profile_image', 'users.id')
+      console.log('test', test)
+      return test
+      // return await Comment.query()
+      //   .where('post_id', id)
+      //   .select('users.username', 'users.profile_image', 'users.id')
+      //   .from('post_comments')
+      //   .fullOuterJoin('users', 'post_comments.user_id', 'user.id')
     }
     // is_liked: async (_, { id }, { user }) => {
     //   let is_liked = false
@@ -71,7 +92,19 @@ export default {
     createPost: async (_, { title, content, image_url }, { user }) => {
       try {
         await requireAuth(user)
+
+        // const postData = args
+        // if (file) {
+        //   console.log('pfile', file)
+        //   postData.filetype = file.type
+        //   postData.url = file.path
+        // }
+        //
+        // console.log('args', ...args)
+        // console.log('file', file)
+
         return await Post.query().insert({
+          // file,
           title,
           content,
           image_url,
@@ -93,17 +126,37 @@ export default {
         throw err
       }
     },
-    deletePost: async (_, { input: { id } }, context) => {
+    deletePost: async (_, { input: { id } }, { user }) => {
       try {
-        console.log('context', context)
-        // await requireAuth(user)
-        console.log('args', id)
+        await requireAuth(user)
 
         const post = await Post.query().deleteById(id)
         console.log('post', post)
         // const test = await post.query().delete().where({ id })
         // console.log('test', test)
         return post
+      } catch (err) {
+        throw err
+      }
+    },
+    createComment: async (_, { id, comment }, { user }) => {
+      try {
+        await requireAuth(user)
+        console.log(id)
+        console.log(comment)
+        console.log(user)
+        const newComment = await Comment.query()
+          .where('post_id', id)
+          .insert({
+            user_id: user.id,
+            comment,
+            post_id: parseInt(id)
+          })
+
+        return newComment
+
+        console.log('id', id)
+        console.log('user', user)
       } catch (err) {
         throw err
       }

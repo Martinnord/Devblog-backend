@@ -3,7 +3,7 @@ export default `
     id: ID!
     username: String
     email: String!
-    name: String    
+    name: String
     profile_image: String
     website_url: String
     bio: String
@@ -15,6 +15,14 @@ export default `
     posts: [Post!]!
     updated_at: Date!
     created_at: Date!
+
+    url: String
+    filetype: String
+  }
+
+  input File {
+    type: String!
+    path: String!
   }
 
   type UserLike {
@@ -49,6 +57,7 @@ export default `
       username: String
       email: String
       name: String
+      file: File
       profile_image: String
       website_url: String
       bio: String

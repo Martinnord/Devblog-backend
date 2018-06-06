@@ -14,6 +14,7 @@ import { createServer } from 'http'
 import { Model } from 'objection'
 import { Post, User } from './models'
 import jwt from 'jsonwebtoken'
+import formidable from 'formidable'
 
 const app = express()
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schemas')))
@@ -27,7 +28,7 @@ Model.knex(knex)
 const addUser = async req => {
   try {
     const token = req.headers.authorization
-    if (token != null) {
+    if (token) {
       const user = await jwt.verify(token.split(' ')[1], constants.JWT_SECRET)
       req.user = user
     } else {
@@ -41,10 +42,43 @@ const addUser = async req => {
 
 app.use(cors())
 app.use(addUser)
+const uploadDir = 'files'
+
+const fileMiddleware = (req, res, next) => {
+  if (!req.is('multipart/form-data')) {
+    return next()
+  }
+
+  const form = formidable.IncomingForm({
+    uploadDir
+  })
+
+  form.parse(req, (error, { operations }, files) => {
+    if (error) {
+      console.log(error)
+    }
+
+    const document = JSON.parse(operations)
+
+    if (Object.keys(files).length) {
+      const { file: { type, path: filePath } } = files
+      console.log('type', type)
+      console.log('filePath', filePath)
+      document.variables.file = {
+        type,
+        path: filePath
+      }
+    }
+
+    req.body = document
+    next()
+  })
+}
 
 app.use(
   '/graphql',
   bodyParser.json(),
+  fileMiddleware,
   graphqlExpress(req => ({
     schema,
     context: {
